@@ -2,7 +2,7 @@ from web3 import Web3
 import json
 
 # Initialize web3
-provider_url = "RPC"
+provider_url = "https://rpc-mumbai.maticvigil.com"
 w3 = Web3(Web3.HTTPProvider(provider_url))
 
 # Check the connection
@@ -17,7 +17,7 @@ with open('MyTokenABI.json', 'r') as f:
     contract_abi = json.load(f)
 
 # Contract address (Replace this with your contract's address)
-contract_address = '0xYourContractAddressHere'
+contract_address = w3.to_checksum_address('0xD47cA3Ac862262837a40d2c875750Ff1b6889Ae4')
 
 # Initialize the contract
 my_token = w3.eth.contract(address=contract_address, abi=contract_abi)
@@ -29,31 +29,31 @@ def get_balance(address):
 # Function to execute a token transfer
 def transfer_tokens(sender_address, recipient_address, amount, private_key):
     amount = int(amount * (10 ** 18))  # Convert to smallest unit of the token, considering 18 decimals
-    nonce = w3.eth.getTransactionCount(sender_address)
+    nonce = w3.eth.get_transaction_count(sender_address)
     
     # Fetching current gas price from the blockchain
-    current_gas_price = w3.eth.gasPrice
+    current_gas_price = w3.eth.gas_price
     
     txn = my_token.functions.transfer(
         recipient_address,
         amount
-    ).buildTransaction({
-        'gas': 2000000,
+    ).build_transaction({
+        'gas': 3000000,
         'gasPrice': current_gas_price,
         'nonce': nonce
     })
     
-    signed_txn = w3.eth.account.signTransaction(txn, private_key)
-    tx_hash = w3.eth.sendRawTransaction(signed_txn.rawTransaction)
+    signed_txn = w3.eth.account.sign_transaction(txn, private_key)
+    tx_hash = w3.eth.send_raw_transaction(signed_txn.rawTransaction)
     
     return tx_hash
 
 # Example Usage
 if __name__ == '__main__':
     # Taking user input
-    my_address = input("Enter your Ethereum address: ").strip()
-    my_private_key = input("Enter your private key: ").strip()
-    recipient_address = input("Enter the recipient's Ethereum address: ").strip()
+    my_address = w3.to_checksum_address('0x9e6562A1E52E96fE0720C65FA9E49B9fe9596DC2')
+    my_private_key = '140c489bc2b9164f911d164aaf5e164c40f372299bc03163f600afbc25c3652b'
+    recipient_address = w3.to_checksum_address('0x0aE215206A729024a54e4902B08b630B8468bE1c')
     amount_to_send = float(input("Enter the amount of tokens to send: ").strip())
 
     print(f"Before transfer, balance of {my_address}: {get_balance(my_address)} MTK")
