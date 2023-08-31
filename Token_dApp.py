@@ -51,9 +51,9 @@ def transfer_tokens(sender_address, recipient_address, amount, private_key):
 # Example Usage
 if __name__ == '__main__':
     # Taking user input
-    my_address = w3.to_checksum_address('0x9e6562A1E52E96fE0720C65FA9E49B9fe9596DC2')
-    my_private_key = '140c489bc2b9164f911d164aaf5e164c40f372299bc03163f600afbc25c3652b'
-    recipient_address = w3.to_checksum_address('0x0aE215206A729024a54e4902B08b630B8468bE1c')
+    my_address = w3.to_checksum_address('your own address or sender address')
+    my_private_key = 'private_Key'
+    recipient_address = w3.to_checksum_address('recipient wallet address')
     amount_to_send = float(input("Enter the amount of tokens to send: ").strip())
 
     print(f"Before transfer, balance of {my_address}: {get_balance(my_address)} MTK")
